@@ -1,0 +1,201 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: "Newsreader", Georgia, Cambria, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --color-brand-navy: #0A1628;
+  --color-brand-blue: #1E3A8A;
+  --color-brand-crimson: #D92632;
+  --color-brand-royal: #2D2AC4;
+  --color-brand-sky: #EEF0FF;
+  --color-brand-surface: #F8FAFC;
+  --color-brand-muted: #64748B;
+
+  /* Aliases for backwards compatibility */
+  --color-blue: #1E3A8A;
+  --color-blue-ink: #0A1628;
+  --color-blue-bg: #F1F5F9;
+  --color-blue-bg-soft: #F8FAFC;
+  --color-red: #D92632;
+  --color-red-bg: #FEF2F2;
+  --color-muted: #64748B;
+  --font-head: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-body: "Plus Jakarta Sans", system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-brand-navy);
+  background-color: #F8FAFC;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Patrón sutil de grilla arquitectónica institucional */
+.bg-grid-pattern {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(10, 22, 40, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(10, 22, 40, 0.04) 1px, transparent 1px);
+}
+
+/* Glassmorphism utilities */
+.glass {
+  background: rgba(10, 22, 40, 0.65);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.glass-light {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--color-blue);
+}
+.eyebrow::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-red);
+}
+.eyebrow-light {
+  color: #D7DCF8;
+}
+.eyebrow-light::before {
+  background: #FF8A6B;
+}
+
+::selection {
+  background: var(--color-blue);
+  color: #fff;
+}
+
+/* hide scrollbar for carousels but keep functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes esc7-pulse {
+  0%, 100% { opacity: .55; transform: scale(.94); }
+  50% { opacity: 1; transform: scale(1); }
+}
+.animate-esc7-pulse {
+  animation: esc7-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes esc7-fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: esc7-fade-up .7s ease both;
+}
+
+/* decorative dot pattern */
+.dot-grid {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.55) 1.5px, transparent 1.6px);
+  background-size: 12px 12px;
+}
+.dot-grid-blue {
+  background-image: radial-gradient(rgba(24, 40, 184, 0.28) 1.5px, transparent 1.6px);
+}
+
+@keyframes esc7-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-fade-in {
+  animation: esc7-fade-in 1s ease both;
+}
+
+/* ---------- Scroll reveal (driven by useReveal) ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- Announcement marquee ---------- */
+@keyframes esc7-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: esc7-marquee 38s linear infinite;
+}
+
+/* ---------- Floating blobs ---------- */
+@keyframes esc7-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(14px, -18px) scale(1.05); }
+}
+.animate-float {
+  animation: esc7-float 9s ease-in-out infinite;
+}
+
+/* ---------- Ken Burns for hero photos ---------- */
+@keyframes esc7-kenburns {
+  from { transform: scale(1.04); }
+  to { transform: scale(1.14); }
+}
+.animate-kenburns {
+  animation: esc7-kenburns 14s ease-out both;
+}
+
+/* ---------- Shine sweep for primary CTAs ---------- */
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.btn-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.35) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform .8s ease;
+}
+.btn-shine:hover::after {
+  transform: translateX(120%);
+}
+
+.text-gradient-brand {
+  background: linear-gradient(95deg, var(--color-brand-crimson), #F05A3C 45%, var(--color-brand-royal));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .animate-marquee, .animate-float, .animate-kenburns, .animate-esc7-pulse { animation: none; }
+}
