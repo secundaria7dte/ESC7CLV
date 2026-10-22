@@ -1,19 +1,21 @@
 import { useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
 
 /**
  * Adds `.is-visible` to every `.reveal` element once it scrolls into view.
- * Re-scans on route change so each page gets its own entrance.
+ * Watches the DOM so lazily loaded pages and filtered lists also get revealed.
  */
 export default function useReveal() {
-  const { pathname } = useLocation()
-
   useEffect(() => {
-    const els = document.querySelectorAll('.reveal:not(.is-visible)')
+    const pendientes = () => document.querySelectorAll('.reveal:not(.is-visible)')
+
     if (!('IntersectionObserver' in window)) {
-      els.forEach((el) => el.classList.add('is-visible'))
-      return
+      const mostrar = () => pendientes().forEach((el) => el.classList.add('is-visible'))
+      mostrar()
+      const mo = new MutationObserver(mostrar)
+      mo.observe(document.body, { childList: true, subtree: true })
+      return () => mo.disconnect()
     }
+
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
@@ -25,7 +27,13 @@ export default function useReveal() {
       },
       { threshold: 0.12, rootMargin: '0px 0px -40px 0px' },
     )
-    els.forEach((el) => io.observe(el))
-    return () => io.disconnect()
-  }, [pathname])
+    const observar = () => pendientes().forEach((el) => io.observe(el))
+    observar()
+    const mo = new MutationObserver(observar)
+    mo.observe(document.body, { childList: true, subtree: true })
+    return () => {
+      mo.disconnect()
+      io.disconnect()
+    }
+  }, [])
 }

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { fotos } from '../data/fotos.js'
 import { institucion, preinscripcion } from '../data/institucion.js'
 import { Arrow } from '../components/Icons.jsx'
+import Seo from '../components/Seo.jsx'
 
 // Only confirmed channels are listed; empty fields in institucion.js are skipped.
 const datosContacto = [
@@ -70,8 +71,11 @@ function IconoContacto({ tipo }) {
 
 export default function Contacto() {
   return (
-    <div className="bg-[#F8FAFC] min-h-screen">
-      {/* Header */}
+    <div className="min-h-screen">
+      <Seo
+        titulo="Contacto"
+        descripcion={`Dirección, teléfono y horario de atención de la ${institucion.nombreCompleto}, ${institucion.localidad}.`}
+      />
       <section className="relative isolate overflow-hidden bg-brand-navy text-white">
         <img
           src={fotos.fachadaTarde}
@@ -80,20 +84,20 @@ export default function Contacto() {
           className="absolute inset-0 -z-20 h-full w-full object-cover opacity-35"
         />
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-brand-navy via-brand-navy/85 to-brand-royal/50" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-20 sm:pt-20 sm:pb-24 animate-fade-up">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-14 sm:pt-20 sm:pb-24 animate-fade-up">
           <span className="eyebrow eyebrow-light">Contacto</span>
-          <h1 className="mt-3 text-4xl sm:text-6xl font-extrabold tracking-tight max-w-3xl leading-[1.05]">
+          <h1 className="mt-3 text-[34px] sm:text-6xl font-extrabold tracking-tight max-w-3xl leading-[1.05]">
             Estamos para{' '}
             <span className="font-serif italic font-normal text-[#FF8A7A]">ayudarte</span>.
           </h1>
-          <p className="mt-5 text-lg text-slate-200 max-w-2xl leading-relaxed">
+          <p className="mt-5 text-base sm:text-lg text-slate-200 max-w-2xl leading-relaxed">
             Si tenés dudas sobre la preinscripción, los requisitos o cualquier otra inquietud, acercate a nuestro
             establecimiento. Te acompañamos en todo el proceso.
           </p>
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <div className="lg:col-span-5 space-y-4">
             {datosContacto.map((c, i) => (
@@ -135,7 +139,7 @@ export default function Contacto() {
           </div>
 
           <div className="lg:col-span-7">
-            <div className="reveal relative overflow-hidden rounded-[28px] bg-gradient-to-br from-brand-crimson to-[#B8213F] p-8 sm:p-10 text-white h-full flex flex-col justify-between gap-8">
+            <div className="reveal relative overflow-hidden rounded-[28px] bg-gradient-to-br from-brand-crimson to-[#B8213F] p-6 sm:p-10 text-white h-full flex flex-col justify-between gap-8">
               <div className="pointer-events-none absolute inset-0 dot-grid opacity-10" />
               <div className="relative space-y-4">
                 <span className="inline-block rounded-full bg-white/15 border border-white/25 px-3 py-1 text-xs font-bold uppercase tracking-wider">
@@ -149,17 +153,17 @@ export default function Contacto() {
                   presentarla completa. Te esperamos de {preinscripcion.horario}, hasta el {preinscripcion.fechaLimiteTexto}.
                 </p>
               </div>
-              <div className="relative flex flex-wrap gap-3">
+              <div className="relative flex flex-col sm:flex-row sm:flex-wrap gap-3">
                 <Link
                   to="/preinscripcion"
-                  className="btn-shine group inline-flex items-center gap-2 rounded-2xl bg-white px-6 py-3.5 font-bold text-brand-crimson hover:bg-slate-50 transition-colors"
+                  className="btn-shine group inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-6 py-3.5 font-bold text-brand-crimson hover:bg-slate-50 transition-colors"
                 >
                   Ver toda la información
                   <Arrow className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </Link>
                 <Link
                   to="/preinscripcion#documentacion"
-                  className="inline-flex items-center rounded-2xl border border-white/40 px-6 py-3.5 font-semibold hover:bg-white/10 transition-colors"
+                  className="inline-flex items-center justify-center rounded-2xl border border-white/40 px-6 py-3.5 font-semibold hover:bg-white/10 transition-colors"
                 >
                   Checklist de documentos
                 </Link>

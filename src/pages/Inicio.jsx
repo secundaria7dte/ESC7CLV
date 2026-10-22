@@ -3,7 +3,12 @@ import { Link } from 'react-router-dom'
 import { fotos, fachadaSegunHora } from '../data/fotos.js'
 import { orientaciones } from '../data/orientaciones.js'
 import { preinscripcion, totalDocumentos } from '../data/institucion.js'
+import { ultimasNoticias } from '../data/noticias.js'
+import { proximosEventos } from '../data/calendario.js'
+import { formatFecha } from '../lib/fechas.js'
 import Countdown from '../components/Countdown.jsx'
+import NoticiaCard from '../components/NoticiaCard.jsx'
+import Seo from '../components/Seo.jsx'
 import { Arrow, TurnoIcon } from '../components/Icons.jsx'
 
 const heroFotos = {
@@ -12,7 +17,6 @@ const heroFotos = {
   noche: { img: fotos.fachadaNoche, label: 'Turno Noche · ESJA' },
 }
 const orden = ['manana', 'tarde', 'noche']
-
 
 export default function Inicio() {
   const [turno, setTurno] = useState(() => fachadaSegunHora().turno)
@@ -26,8 +30,12 @@ export default function Inicio() {
     return () => clearInterval(t)
   }, [pausado])
 
+  const novedades = ultimasNoticias(3)
+  const fechas = proximosEventos(undefined, 3)
+
   return (
     <>
+      <Seo descripcion={`Escuela Secundaria N.° 7 "Carlos Lorenzo Vergara", Diamante, Entre Ríos. Turnos mañana, tarde y noche (ESJA). Preinscripción ${preinscripcion.anio}, Ciclo Lectivo ${preinscripcion.cicloLectivo}.`} />
       {/* ===================================================================== */}
       {/* HERO: foto a sangre con la fachada según el turno                     */}
       {/* ===================================================================== */}
@@ -45,7 +53,7 @@ export default function Inicio() {
         ))}
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-slate-950/90 via-slate-950/60 to-transparent" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-24 sm:pt-24 sm:pb-32 lg:pt-28 lg:pb-36">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-24 sm:pt-24 sm:pb-32 lg:pt-28 lg:pb-36">
           <div className="max-w-2xl space-y-7 animate-fade-up">
             <Link
               to="/preinscripcion"
@@ -55,29 +63,29 @@ export default function Inicio() {
               <span>Ciclo Lectivo {preinscripcion.cicloLectivo} · Preinscripciones abiertas →</span>
             </Link>
 
-            <h1 className="text-[42px] sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.02]">
+            <h1 className="text-[40px] sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.02]">
               Tu próximo paso
               <br />
               empieza en la{' '}
               <span className="font-serif italic font-normal text-white">N.° 7</span>.
             </h1>
 
-            <p className="text-lg sm:text-xl text-slate-200 leading-relaxed max-w-xl">
+            <p className="text-base sm:text-xl text-slate-200 leading-relaxed max-w-xl">
               En la <strong className="text-white">Escuela Secundaria N.° 7 &ldquo;Carlos Lorenzo Vergara&rdquo;</strong>{' '}
               te recibimos en una comunidad que te acompaña, con propuestas en los turnos mañana, tarde y noche.
             </p>
 
-            <div className="flex flex-wrap items-center gap-3.5 pt-1">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 pt-1">
               <Link
                 to="/preinscripcion"
-                className="group inline-flex items-center gap-2 rounded-2xl bg-white text-slate-950 hover:bg-slate-100 px-7 py-4 text-base font-semibold shadow-sm active:scale-[0.98] transition-all"
+                className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-white text-slate-950 hover:bg-slate-100 px-7 py-4 text-base font-semibold shadow-sm active:scale-[0.98] transition-all"
               >
                 Quiero preinscribirme
                 <Arrow className="w-5 h-5 transition-transform group-hover:translate-x-1" />
               </Link>
               <Link
                 to="/orientaciones"
-                className="inline-flex items-center gap-2 rounded-2xl bg-slate-900/50 backdrop-blur-md text-white border border-white/20 hover:bg-white/10 px-7 py-4 text-base font-semibold active:scale-[0.98] transition-all"
+                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-900/50 backdrop-blur-md text-white border border-white/20 hover:bg-white/10 px-7 py-4 text-base font-semibold active:scale-[0.98] transition-all"
               >
                 Ver orientaciones
               </Link>
@@ -85,7 +93,7 @@ export default function Inicio() {
           </div>
 
           {/* Selector de turno para la foto */}
-          <div className="mt-14 flex flex-wrap gap-2">
+          <div className="-mx-4 mt-10 sm:mt-14 flex gap-2 overflow-x-auto px-4 no-scrollbar sm:mx-0 sm:flex-wrap sm:px-0">
             {orden.map((id) => (
               <button
                 key={id}
@@ -94,7 +102,7 @@ export default function Inicio() {
                   setTurno(id)
                   setPausado(true)
                 }}
-                className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold backdrop-blur-md border transition-all ${id === turno
+                className={`flex flex-none items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold backdrop-blur-md border transition-all ${id === turno
                     ? 'bg-white text-slate-950 border-white'
                     : 'bg-slate-950/50 text-slate-300 border-white/15 hover:bg-slate-950/70'
                   }`}
@@ -112,7 +120,7 @@ export default function Inicio() {
       {/* ===================================================================== */}
       <section className="relative z-10 -mt-14 sm:-mt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <article className="reveal grid overflow-hidden rounded-[28px] bg-white shadow-[0_30px_80px_-30px_rgba(10,22,40,0.45)] border border-slate-200/80 lg:grid-cols-12">
-          <div className="relative lg:col-span-5 min-h-[240px]">
+          <div className="relative lg:col-span-5 min-h-[200px] sm:min-h-[240px]">
             <img
               src={fotos.interior}
               alt="Estudiantes de la Escuela N.° 7"
@@ -131,10 +139,10 @@ export default function Inicio() {
             </div>
           </div>
 
-          <div className="lg:col-span-7 p-7 sm:p-10 space-y-6">
+          <div className="lg:col-span-7 p-5 sm:p-10 space-y-6">
             <div className="space-y-3">
               <span className="eyebrow">Preinscripción · {preinscripcion.anio}</span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-brand-navy leading-tight">
+              <h2 className="text-[26px] sm:text-4xl font-extrabold tracking-tight text-brand-navy leading-tight">
                 ¡Sumate a la Secundaria N.° 7! Ya podés preinscribirte para{' '}
                 <span className="text-gradient-brand">1.° año</span>.
               </h2>
@@ -173,17 +181,17 @@ export default function Inicio() {
               </ul>
             </div>
 
-            <div className="flex flex-wrap gap-3 pt-1">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3 pt-1">
               <Link
                 to="/preinscripcion"
-                className="btn-shine group inline-flex items-center gap-2 rounded-xl bg-brand-navy px-6 py-3.5 text-sm font-bold text-white hover:bg-brand-royal transition-colors"
+                className="btn-shine group inline-flex items-center justify-center gap-2 rounded-xl bg-brand-navy px-6 py-3.5 text-sm font-bold text-white hover:bg-brand-royal transition-colors"
               >
                 Leer toda la información
                 <Arrow className="w-4 h-4 transition-transform group-hover:translate-x-1" />
               </Link>
               <Link
                 to="/preinscripcion#documentacion"
-                className="inline-flex items-center gap-2 rounded-xl border border-slate-300 px-6 py-3.5 text-sm font-semibold text-brand-navy hover:border-brand-navy transition-colors"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 px-6 py-3.5 text-sm font-semibold text-brand-navy hover:border-brand-navy transition-colors"
               >
                 ¿Qué tengo que llevar?
               </Link>
@@ -193,13 +201,73 @@ export default function Inicio() {
       </section>
 
       {/* ===================================================================== */}
+      {/* NOVEDADES Y PRÓXIMAS FECHAS                                           */}
+      {/* ===================================================================== */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 lg:pt-24">
+        <div className="grid gap-12 lg:grid-cols-12 lg:gap-8">
+          <div className="lg:col-span-8">
+            <div className="reveal flex items-end justify-between gap-4 mb-5">
+              <div className="space-y-2">
+                <span className="eyebrow">Novedades</span>
+                <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-brand-navy">Últimas noticias</h2>
+              </div>
+              <Link to="/noticias" className="group inline-flex flex-none items-center gap-1.5 py-2 text-sm font-bold text-brand-navy hover:text-brand-crimson">
+                Ver todas
+                <Arrow className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </div>
+            <div className="grid gap-3 sm:gap-5 sm:grid-cols-2">
+              {novedades.map((n, i) => (
+                <NoticiaCard key={n.slug} noticia={n} delay={i * 80} />
+              ))}
+            </div>
+          </div>
+
+          <aside className="lg:col-span-4">
+            <div className="reveal space-y-2 mb-5">
+              <span className="eyebrow">Calendario</span>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-brand-navy">Próximas fechas</h2>
+            </div>
+            <div className="reveal overflow-hidden rounded-2xl border border-slate-200 bg-white">
+              {fechas.length === 0 ? (
+                <p className="p-5 text-sm text-slate-500">No hay fechas próximas cargadas.</p>
+              ) : (
+                <ol className="divide-y divide-slate-100">
+                  {fechas.map((e) => (
+                    <li key={`${e.titulo}-${e.fecha}`}>
+                      <Link to={e.enlace ?? '/calendario'} className="flex items-center gap-4 p-4 hover:bg-slate-50 transition-colors">
+                        <span className="flex w-12 flex-none flex-col items-center rounded-xl bg-brand-sky py-1.5 text-brand-royal">
+                          <span className="font-mono text-[10px] font-bold uppercase">
+                            {formatFecha(e.fecha, { month: 'short' }).replace('.', '')}
+                          </span>
+                          <span className="text-xl font-extrabold leading-none text-brand-navy">{e.fecha.getDate()}</span>
+                        </span>
+                        <span className="min-w-0 text-sm font-bold text-brand-navy leading-snug">{e.titulo}</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ol>
+              )}
+              <Link
+                to="/calendario"
+                className="flex items-center justify-center gap-1.5 border-t border-slate-100 px-4 py-3.5 text-sm font-bold text-brand-navy hover:text-brand-crimson"
+              >
+                Ver calendario completo
+                <Arrow className="w-4 h-4" />
+              </Link>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      {/* ===================================================================== */}
       {/* PROPUESTAS EDUCATIVAS                                                 */}
       {/* ===================================================================== */}
-      <section id="orientaciones" className="py-20 lg:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="reveal flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+      <section id="orientaciones" className="py-16 lg:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="reveal flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 gap-4 sm:gap-6">
           <div className="space-y-3">
             <span className="eyebrow">Nuestras propuestas educativas</span>
-            <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-brand-navy leading-[1.05]">
+            <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-brand-navy leading-[1.05]">
               Elegí el camino que{' '}
               <span className="font-serif italic font-normal text-brand-crimson">mejor te queda</span>.
             </h2>
@@ -209,7 +277,7 @@ export default function Inicio() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
           {orientaciones.map((o, i) => {
             const isNight = o.id === 'noche'
             return (
@@ -278,12 +346,12 @@ export default function Inicio() {
       {/* ===================================================================== */}
       {/* VIDA ESCOLAR                                                          */}
       {/* ===================================================================== */}
-      <section id="vida-escolar" className="relative overflow-hidden py-20 lg:py-24 bg-brand-sky/60">
+      <section id="vida-escolar" className="relative overflow-hidden py-16 lg:py-24 bg-brand-sky/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="reveal flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
             <div className="space-y-3">
               <span className="eyebrow">Vida escolar</span>
-              <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-brand-navy">
+              <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-brand-navy">
                 Momentos de nuestra comunidad
               </h2>
             </div>
@@ -296,12 +364,12 @@ export default function Inicio() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 md:grid-rows-2 gap-4 md:h-[520px]">
+          <div className="grid grid-cols-2 md:grid-cols-4 md:grid-rows-2 gap-3 sm:gap-4 md:h-[520px]">
             {[
-              { img: fotos.voley1, label: 'Escuela Secundaria N.° 7', title: 'Deporte', cls: 'col-span-2 row-span-2 min-h-[280px]' },
-              { img: fotos.charla1, label: 'Escuela Secundaria N.° 7', title: 'Charlas', cls: 'col-span-2 min-h-[200px]' },
-              { img: fotos.picnic, label: 'Escuela Secundaria N.° 7', title: 'Convivencia', cls: 'min-h-[180px]' },
-              { img: fotos.deporte, label: 'Escuela Secundaria N.° 7', title: 'Deporte', cls: 'min-h-[180px]' },
+              { img: fotos.voley1, label: 'Escuela Secundaria N.° 7', title: 'Deporte', cls: 'col-span-2 row-span-2 min-h-[240px] sm:min-h-[280px]' },
+              { img: fotos.charla1, label: 'Escuela Secundaria N.° 7', title: 'Charlas', cls: 'col-span-2 min-h-[180px] sm:min-h-[200px]' },
+              { img: fotos.picnic, label: 'Escuela Secundaria N.° 7', title: 'Convivencia', cls: 'min-h-[150px] sm:min-h-[180px]' },
+              { img: fotos.deporte, label: 'Escuela Secundaria N.° 7', title: 'Deporte', cls: 'min-h-[150px] sm:min-h-[180px]' },
             ].map((f, i) => (
               <Link
                 to="/vida-escolar"
@@ -331,8 +399,8 @@ export default function Inicio() {
       {/* ===================================================================== */}
       {/* CTA FINAL                                                             */}
       {/* ===================================================================== */}
-      <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="reveal relative overflow-hidden rounded-[32px] bg-gradient-to-br from-brand-crimson via-[#C72A45] to-brand-royal px-7 py-14 sm:px-14 sm:py-16 text-white shadow-2xl">
+      <section className="py-16 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="reveal relative overflow-hidden rounded-[28px] sm:rounded-[32px] bg-gradient-to-br from-brand-crimson via-[#C72A45] to-brand-royal px-6 py-10 sm:px-14 sm:py-16 text-white shadow-2xl">
           <div className="pointer-events-none absolute inset-0 dot-grid opacity-[0.12]" />
           <img
             src={fotos.logo}
@@ -345,7 +413,7 @@ export default function Inicio() {
               <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-[1.05]">
                 ¡Estamos listos para recibirte!
               </h2>
-              <p className="text-lg text-white/85 max-w-xl leading-relaxed">
+              <p className="text-base sm:text-lg text-white/85 max-w-xl leading-relaxed">
                 Leé los requisitos, prepará tu carpeta y acercate a la escuela antes del{' '}
                 <strong className="text-white">{preinscripcion.fechaLimiteTexto}</strong>.
               </p>

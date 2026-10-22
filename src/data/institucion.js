@@ -67,3 +67,6 @@ export const documentacion = [
 ]
 
 export const totalDocumentos = documentacion.reduce((n, g) => n + g.items.length, 0)
+
+/** True while pre-registration is still being received. */
+export const preinscripcionAbierta = (now = new Date()) => now <= preinscripcion.fechaLimite

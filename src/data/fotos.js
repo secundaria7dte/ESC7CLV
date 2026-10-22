@@ -1,21 +1,22 @@
-// Every photo lives in /public; this keeps the file names in one place.
-const pub = (name) => encodeURI(`/${name}`)
+// Every photo lives in /public/img; this keeps the file names in one place.
+// Keep file names lowercase, without spaces or accents (e.g. 'acto-25-de-mayo.webp').
+const img = (name) => `/img/${name}`
 
 export const fotos = {
-  logo: pub('logo-escuela7-web.png'),
-  fachadaManana: pub('Imagen escuela vacia 2 Fachada mañana.webp'),
-  fachadaTarde: pub('Imagen escuela vacia 2 Fachada tarde.webp'),
-  fachadaNoche: pub('Imagen escuela vacia 2 Fachada noche.webp'),
-  entrada: pub('Entrada principal.webp'),
-  interior: pub('Imagen escuela vacia 1 copada.webp'),
-  pasillo: pub('Pasillo vacio.webp'),
-  deporte: pub('jornada deporte.webp'),
-  voley1: pub('voley deporte.webp'),
-  voley2: pub('voley deporte 2.webp'),
-  charla1: pub('charla alimentacion sentados.webp'),
-  charla2: pub('charla alimentacion sentados 2.webp'),
-  picnic: pub('chicos de picnic.webp'),
-  alumnos: pub('alumnos sentados, vertical.webp'),
+  logo: '/logo-escuela7-web.png',
+  fachadaManana: img('fachada-manana.webp'),
+  fachadaTarde: img('fachada-tarde.webp'),
+  fachadaNoche: img('fachada-noche.webp'),
+  entrada: img('entrada-principal.webp'),
+  interior: img('interior.webp'),
+  pasillo: img('pasillo.webp'),
+  deporte: img('jornada-deporte.webp'),
+  voley1: img('voley-1.webp'),
+  voley2: img('voley-2.webp'),
+  charla1: img('charla-alimentacion-1.webp'),
+  charla2: img('charla-alimentacion-2.webp'),
+  picnic: img('picnic.webp'),
+  alumnos: img('alumnos.webp'),
 }
 
 /**

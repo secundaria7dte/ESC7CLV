@@ -5,6 +5,7 @@ import { orientaciones } from '../data/orientaciones.js'
 import { preinscripcion, documentacion, totalDocumentos } from '../data/institucion.js'
 import Countdown from '../components/Countdown.jsx'
 import { Arrow, TurnoIcon } from '../components/Icons.jsx'
+import Seo from '../components/Seo.jsx'
 
 const STORAGE_KEY = `esc7-checklist-${preinscripcion.cicloLectivo}`
 
@@ -40,7 +41,11 @@ export default function Preinscripcion() {
   const formDisponible = Boolean(preinscripcion.formUrl)
 
   return (
-    <div className="bg-[#F8FAFC]">
+    <div>
+      <Seo
+        titulo={`Preinscripción ${preinscripcion.anio} ${preinscripcion.cicloLectivo}`}
+        descripcion={`Requisitos, documentación y formulario de preinscripción a ${preinscripcion.anio}, Ciclo Lectivo ${preinscripcion.cicloLectivo}. Hasta el ${preinscripcion.fechaLimiteTexto}.`}
+      />
       {/* ===================================================================== */}
       {/* PORTADA DE LA NOTICIA                                                 */}
       {/* ===================================================================== */}

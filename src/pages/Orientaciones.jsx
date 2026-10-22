@@ -1,5 +1,7 @@
 import { Link, useSearchParams } from 'react-router-dom'
 import { orientaciones } from '../data/orientaciones.js'
+import PageHeader, { Filtros } from '../components/PageHeader.jsx'
+import Seo from '../components/Seo.jsx'
 
 export default function Orientaciones() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -19,90 +21,35 @@ export default function Orientaciones() {
       : orientaciones.filter((o) => o.id === activeTurno)
 
   return (
-    <div className="bg-[#F8FAFC] min-h-screen">
-      {/* Header Institucional */}
-      <section className="bg-grid-pattern border-b border-slate-200 pt-12 pb-14 sm:pt-16 sm:pb-18">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="inline-flex items-center gap-2 text-brand-crimson font-mono text-xs font-semibold uppercase tracking-widest mb-3">
-            <span className="w-2 h-2 rounded-full bg-brand-crimson animate-pulse" />
-            <span>Propuesta Académica Oficial</span>
-          </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-brand-navy max-w-2xl leading-[1.12]">
+    <div className="min-h-screen">
+      <Seo
+        titulo="Orientaciones y turnos"
+        descripcion="Ciclo orientado en los turnos mañana y tarde, y ESJA en el turno noche. Conocé las orientaciones de la Escuela Secundaria N.° 7."
+      />
+      <PageHeader
+        migas={[{ label: 'Orientaciones y turnos' }]}
+        eyebrow="Propuesta académica"
+        titulo={
+          <>
             Orientaciones y turnos con{' '}
             <span className="font-serif italic font-normal text-brand-crimson">propósito</span> pedagógico.
-          </h1>
-          <p className="mt-4 text-base sm:text-lg text-slate-600 max-w-2xl leading-relaxed">
-            Contamos con diferentes orientaciones y turnos para que elijas el camino que mejor se adapte a tu futuro.
-          </p>
-
-          {/* Filtro rápido por turno con íconos vectoriales limpios */}
-          <div className="flex flex-wrap items-center gap-2 pt-8">
-            <button
-              type="button"
-              onClick={() => handleFilterChange('todos')}
-              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
-                activeTurno === 'todos'
-                  ? 'bg-brand-navy text-white shadow-sm'
-                  : 'bg-white text-slate-600 hover:text-brand-navy border border-slate-200 hover:bg-slate-50'
-              }`}
-            >
-              Todos los turnos
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleFilterChange('manana')}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
-                activeTurno === 'manana'
-                  ? 'bg-brand-navy text-white shadow-sm'
-                  : 'bg-white text-slate-600 hover:text-brand-navy border border-slate-200 hover:bg-slate-50'
-              }`}
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.75">
-                <circle cx="12" cy="12" r="4" />
-                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
-              </svg>
-              <span>Turno Mañana</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleFilterChange('tarde')}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
-                activeTurno === 'tarde'
-                  ? 'bg-brand-navy text-white shadow-sm'
-                  : 'bg-white text-slate-600 hover:text-brand-navy border border-slate-200 hover:bg-slate-50'
-              }`}
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.75">
-                <path d="M12 9a4 4 0 0 0-4 4c0 .8.2 1.6.7 2.2" />
-                <path d="M17.5 19H9a5 5 0 0 1-5-5 5 5 0 0 1 4.5-4.95A6 6 0 0 1 20 13a4.5 4.5 0 0 1-2.5 4.18" />
-                <path d="M12 3v3M18.36 5.64l-2.12 2.12M21 12h-3" />
-              </svg>
-              <span>Turno Tarde</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleFilterChange('noche')}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
-                activeTurno === 'noche'
-                  ? 'bg-brand-navy text-white shadow-sm'
-                  : 'bg-white text-slate-600 hover:text-brand-navy border border-slate-200 hover:bg-slate-50'
-              }`}
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.75">
-                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-              </svg>
-              <span>Turno Noche (ESJA)</span>
-            </button>
-          </div>
-        </div>
-      </section>
+          </>
+        }
+        intro="Contamos con diferentes orientaciones y turnos para que elijas el camino que mejor se adapte a tu futuro."
+      >
+        <Filtros
+          opciones={[
+            { id: 'todos', label: 'Todos los turnos' },
+            ...orientaciones.map((o) => ({ id: o.id, label: o.id === 'noche' ? `${o.turno} (ESJA)` : o.turno })),
+          ]}
+          activo={activeTurno}
+          onCambiar={handleFilterChange}
+        />
+      </PageHeader>
 
       {/* Grid de Orientaciones */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8">
           {filteredOrientaciones.map((o) => {
             const isNight = o.id === 'noche'
             return (

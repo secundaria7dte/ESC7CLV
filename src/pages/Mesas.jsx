@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { institucion } from '../data/institucion.js'
 import { mesaActual, estadoMesa, etiquetaEstado } from '../data/mesas.js'
+import Seo from '../components/Seo.jsx'
 
 const estadoColor = {
   proxima: 'bg-amber-500',
@@ -42,10 +43,14 @@ export default function Mesas() {
   const vigente = estado && estado !== 'finalizada'
 
   return (
-    <div className="bg-[#F8FAFC] min-h-screen">
-      <section className="bg-grid-pattern border-b border-slate-200 pt-12 pb-14 sm:pt-16 sm:pb-18">
+    <div className="min-h-screen">
+      <Seo
+        titulo="Mesas de examen"
+        descripcion={vigente ? `Inscripción a ${mesa.titulo} ${mesa.periodo}: del ${mesa.inscripcion.desdeTexto} al ${mesa.inscripcion.hastaTexto}.` : 'Convocatorias a mesas de examen de la Escuela Secundaria N.° 7.'}
+      />
+      <section className="bg-grid-pattern border-b border-slate-200 pt-8 pb-10 sm:pt-14 sm:pb-14">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <nav className="mb-6 flex items-center gap-2 text-sm text-slate-500">
+          <nav aria-label="Ruta de navegación" className="mb-5 flex items-center gap-1.5 text-[13px] text-slate-500">
             <Link to="/" className="hover:text-brand-navy">Inicio</Link>
             <span>/</span>
             <span className="text-brand-navy font-semibold">Mesas de examen</span>
@@ -62,7 +67,7 @@ export default function Mesas() {
                   {mesa.periodo}
                 </span>
               </div>
-              <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-brand-navy max-w-3xl leading-[1.12]">
+              <h1 className="text-[32px] sm:text-5xl font-extrabold tracking-tight text-brand-navy max-w-3xl leading-[1.12]">
                 Inscripción a{' '}
                 <span className="font-serif italic font-normal text-brand-crimson">{mesa.titulo}</span>
               </h1>
@@ -73,7 +78,7 @@ export default function Mesas() {
             </>
           ) : (
             <>
-              <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-brand-navy max-w-3xl leading-[1.12]">
+              <h1 className="text-[32px] sm:text-5xl font-extrabold tracking-tight text-brand-navy max-w-3xl leading-[1.12]">
                 Mesas de <span className="font-serif italic font-normal text-brand-crimson">examen</span>
               </h1>
               <p className="mt-4 text-base sm:text-lg text-slate-600 max-w-2xl leading-relaxed">
@@ -86,7 +91,7 @@ export default function Mesas() {
       </section>
 
       {vigente && (
-        <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 space-y-5">
+        <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16 space-y-4 sm:space-y-5">
           {/* Fechas clave */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div className="reveal rounded-2xl bg-brand-navy text-white p-6 sm:p-7">
@@ -108,7 +113,7 @@ export default function Mesas() {
               <p className="mt-4 text-2xl sm:text-3xl font-extrabold leading-tight text-brand-navy">
                 Semana {mesa.examenes.texto}
               </p>
-              <p className="mt-2 text-sm text-slate-500">Del corriente año.</p>
+              <Link to="/calendario" className="mt-2 inline-block text-sm font-semibold text-brand-royal hover:underline">Ver en el calendario</Link>
             </div>
           </div>
 

@@ -1,9 +1,18 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { galeria, categoriasGaleria } from '../data/galeria.js'
+import PageHeader, { Filtros } from '../components/PageHeader.jsx'
+import Seo from '../components/Seo.jsx'
 
 export default function VidaEscolar() {
   const [filtro, setFiltro] = useState('Todas')
   const [fotoSeleccionada, setFotoSeleccionada] = useState(null)
+
+  useEffect(() => {
+    if (!fotoSeleccionada) return
+    const onKey = (e) => e.key === 'Escape' && setFotoSeleccionada(null)
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [fotoSeleccionada])
 
   const categorias = ['Todas', ...Object.keys(categoriasGaleria)]
 
@@ -13,51 +22,38 @@ export default function VidaEscolar() {
   })
 
   return (
-    <div className="bg-[#F8FAFC] min-h-screen">
-      {/* Cabecera Editorial */}
-      <section className="bg-grid-pattern border-b border-slate-200 pt-12 pb-14 sm:pt-16 sm:pb-18">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="inline-flex items-center gap-2 text-brand-crimson font-mono text-xs font-semibold uppercase tracking-widest mb-3">
-            <span className="w-2 h-2 rounded-full bg-brand-crimson animate-pulse" />
-            <span>Archivo Visual Institucional</span>
-          </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-brand-navy max-w-2xl leading-[1.12]">
+    <div className="min-h-screen">
+      <Seo
+        titulo="Vida escolar"
+        descripcion="Jornadas deportivas, charlas y momentos de convivencia de la comunidad de la Escuela Secundaria N.° 7."
+      />
+      <PageHeader
+        migas={[{ label: 'Vida escolar' }]}
+        eyebrow="Archivo visual"
+        titulo={
+          <>
             La vida cotidiana de nuestra{' '}
             <span className="font-serif italic font-normal text-brand-crimson">comunidad</span> escolar.
-          </h1>
-          <p className="mt-4 text-base sm:text-lg text-slate-600 max-w-2xl leading-relaxed">
-            Jornadas deportivas, charlas y momentos de convivencia: imágenes de estudiantes y docentes de la Escuela N.° 7.
-          </p>
-
-          {/* Filtros de categoría sin emojis */}
-          <div className="flex flex-wrap items-center gap-2 pt-8">
-            {categorias.map((c) => (
-              <button
-                key={c}
-                type="button"
-                onClick={() => setFiltro(c)}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
-                  filtro === c
-                    ? 'bg-brand-navy text-white shadow-sm'
-                    : 'bg-white text-slate-600 hover:text-brand-navy border border-slate-200 hover:bg-slate-50'
-                }`}
-              >
-                {c}
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
+          </>
+        }
+        intro="Jornadas deportivas, charlas y momentos de convivencia: imágenes de estudiantes y docentes de la Escuela N.° 7."
+      >
+        <Filtros
+          opciones={categorias.map((c) => ({ id: c, label: c }))}
+          activo={filtro}
+          onCambiar={setFiltro}
+        />
+      </PageHeader>
 
       {/* Bento Grid Fotográfico */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-5 auto-rows-[250px] sm:auto-rows-[290px]">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-16">
+        <div className="grid grid-cols-2 lg:grid-cols-12 gap-3 sm:gap-5 auto-rows-[150px] sm:auto-rows-[290px]">
           {fotosFiltradas.map((g, i) => {
             const meta = categoriasGaleria[g.cat]
             
             // Asignación de spans asimétricos tipo Bento
             const isWide = i % 5 === 0 || i % 5 === 3
-            const colSpanClass = isWide ? 'lg:col-span-8' : 'lg:col-span-4'
+            const colSpanClass = isWide ? 'col-span-2 lg:col-span-8' : 'lg:col-span-4'
 
             return (
               <div
@@ -75,7 +71,7 @@ export default function VidaEscolar() {
                 <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/95 via-brand-navy/20 to-transparent" />
                 
                 {/* Pie de foto con botón de zoom vectorial */}
-                <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between text-white z-10">
+                <div className="absolute bottom-3 left-3 right-3 sm:bottom-4 sm:left-4 sm:right-4 flex items-end justify-between text-white z-10">
                   <div className="pr-3">
                     <span className={`inline-block px-3 py-1 rounded-lg text-white text-xs font-bold tracking-wide shadow-sm border border-white/15 ${meta.tag}`}>
                       {meta.label}
@@ -83,7 +79,7 @@ export default function VidaEscolar() {
                   </div>
 
                   {/* Botón de zoom con ícono SVG sin emojis */}
-                  <div className="w-9 h-9 rounded-lg bg-slate-950/60 backdrop-blur-md border border-white/15 text-white flex items-center justify-center group-hover:bg-brand-crimson transition-colors flex-none shadow-sm">
+                  <div className="hidden sm:flex w-9 h-9 rounded-lg bg-slate-950/60 backdrop-blur-md border border-white/15 text-white items-center justify-center group-hover:bg-brand-crimson transition-colors flex-none shadow-sm">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.75">
                       <polyline points="15 3 21 3 21 9" />
                       <polyline points="9 21 3 21 3 15" />
