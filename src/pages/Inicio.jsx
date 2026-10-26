@@ -284,9 +284,12 @@ export default function Inicio() {
               <article
                 key={o.id}
                 style={{ '--reveal-delay': `${i * 120}ms` }}
-                className={`reveal group relative flex flex-col overflow-hidden rounded-[26px] border transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_24px_50px_-20px_rgba(10,22,40,0.35)] ${isNight ? 'bg-brand-navy text-white border-brand-navy' : 'bg-white border-slate-200'
-                  }`}
+                className="reveal group"
               >
+                <div
+                  className={`relative flex h-full flex-col overflow-hidden rounded-[26px] border transition-all duration-300 group-hover:-translate-y-1.5 group-hover:shadow-[0_24px_50px_-20px_rgba(10,22,40,0.35)] ${isNight ? 'bg-brand-navy text-white border-brand-navy' : 'bg-white border-slate-200'
+                    }`}
+                >
                 <div className="relative h-44 overflow-hidden">
                   <img
                     src={o.img}
@@ -336,6 +339,7 @@ export default function Inicio() {
                     Ver más
                     <Arrow />
                   </Link>
+                </div>
                 </div>
               </article>
             )
