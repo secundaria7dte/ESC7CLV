@@ -4,7 +4,7 @@ import { eventos, proximosEventos, tiposEvento } from '../data/calendario.js'
 import { claveMes, diasHasta, formatFecha, nombreMes } from '../lib/fechas.js'
 import { descargarIcs } from '../lib/ics.js'
 import PageHeader, { Filtros } from '../components/PageHeader.jsx'
-import { Arrow, Icono } from '../components/Icons.jsx'
+import { Arrow, Chevron, Icono } from '../components/Icons.jsx'
 import Seo from '../components/Seo.jsx'
 
 /** "Hoy", "En curso", "Faltan 5 días"… or null once it is over. */
@@ -85,9 +85,112 @@ function Evento({ evento, delay }) {
   )
 }
 
+const DIAS_SEMANA = ['L', 'M', 'M', 'J', 'V', 'S', 'D']
+
+const mismoDia = (a, b) => diasHasta(a, b) === 0
+
+/** Events that cover the given calendar day. */
+const eventosDelDia = (dia) =>
+  eventos.filter((e) => diasHasta(e.fecha, dia) <= 0 && diasHasta(e.hasta ?? e.fecha, dia) >= 0)
+
+/** Monthly grid (weeks start on Monday) with a dot per event type on each day. */
+function Cuadricula({ mes, onMes, seleccionado, onSeleccionar }) {
+  const hoy = new Date()
+  const primero = new Date(mes.getFullYear(), mes.getMonth(), 1)
+  const huecos = (primero.getDay() + 6) % 7
+  const total = new Date(mes.getFullYear(), mes.getMonth() + 1, 0).getDate()
+  const dias = [
+    ...Array.from({ length: huecos }, () => null),
+    ...Array.from({ length: total }, (_, i) => new Date(mes.getFullYear(), mes.getMonth(), i + 1)),
+  ]
+
+  const cambiarMes = (delta) => onMes(new Date(mes.getFullYear(), mes.getMonth() + delta, 1))
+
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-white p-3 sm:p-5">
+      <div className="flex items-center justify-between">
+        <button
+          type="button"
+          onClick={() => cambiarMes(-1)}
+          aria-label="Mes anterior"
+          className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 hover:text-brand-navy transition-colors"
+        >
+          <Chevron className="w-5 h-5 rotate-90" />
+        </button>
+        <h2 className="text-base font-extrabold text-brand-navy first-letter:uppercase sm:text-lg">{nombreMes(mes)}</h2>
+        <button
+          type="button"
+          onClick={() => cambiarMes(1)}
+          aria-label="Mes siguiente"
+          className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 hover:text-brand-navy transition-colors"
+        >
+          <Chevron className="w-5 h-5 -rotate-90" />
+        </button>
+      </div>
+
+      <div className="mt-3 grid grid-cols-7 gap-1 text-center">
+        {DIAS_SEMANA.map((d, i) => (
+          <span key={i} className="py-1 text-[11px] font-bold uppercase text-slate-400">
+            {d}
+          </span>
+        ))}
+        {dias.map((dia, i) => {
+          if (!dia) return <span key={`h${i}`} />
+          const delDia = eventosDelDia(dia)
+          const tipos = [...new Set(delDia.map((e) => e.tipo))].slice(0, 3)
+          const esHoy = mismoDia(dia, hoy)
+          const activo = seleccionado && mismoDia(dia, seleccionado)
+          return (
+            <button
+              key={dia.getDate()}
+              type="button"
+              onClick={() => onSeleccionar(activo ? null : dia)}
+              aria-pressed={activo}
+              aria-label={`${formatFecha(dia, { day: 'numeric', month: 'long' })}${delDia.length ? `, ${delDia.length} evento${delDia.length > 1 ? 's' : ''}` : ''}`}
+              className={`flex aspect-square flex-col items-center justify-center gap-0.5 rounded-xl text-sm font-semibold transition-colors ${
+                activo
+                  ? 'bg-brand-navy text-white'
+                  : esHoy
+                    ? 'bg-brand-sky text-brand-royal ring-1 ring-brand-royal'
+                    : 'text-slate-700 hover:bg-slate-100'
+              }`}
+            >
+              {dia.getDate()}
+              <span className="flex h-1.5 gap-0.5">
+                {tipos.map((t) => (
+                  <span key={t} className={`h-1.5 w-1.5 rounded-full ${(tiposEvento[t] ?? tiposEvento.acto).color}`} />
+                ))}
+              </span>
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 export default function Calendario() {
-  const [vista, setVista] = useState('proximos')
-  const lista = vista === 'proximos' ? proximosEventos() : eventos
+  const [vista, setVista] = useState('mes')
+  const [mes, setMes] = useState(() => new Date(new Date().getFullYear(), new Date().getMonth(), 1))
+  const [seleccionado, setSeleccionado] = useState(null)
+
+  const cambiarVista = (v) => {
+    setVista(v)
+    setSeleccionado(null)
+  }
+  const cambiarMes = (m) => {
+    setMes(m)
+    setSeleccionado(null)
+  }
+
+  let lista
+  if (vista === 'proximos') lista = proximosEventos()
+  else if (vista === 'todos') lista = eventos
+  else if (seleccionado) lista = eventosDelDia(seleccionado)
+  else {
+    const finMes = new Date(mes.getFullYear(), mes.getMonth() + 1, 0)
+    lista = eventos.filter((e) => e.fecha <= finMes && (e.hasta ?? e.fecha) >= mes)
+  }
 
   const meses = []
   lista.forEach((e) => {
@@ -113,18 +216,23 @@ export default function Calendario() {
       >
         <Filtros
           opciones={[
+            { id: 'mes', label: 'Mes a mes' },
             { id: 'proximos', label: 'Próximas fechas' },
             { id: 'todos', label: 'Todo el ciclo' },
           ]}
           activo={vista}
-          onCambiar={setVista}
+          onCambiar={cambiarVista}
         />
       </PageHeader>
 
       <section className="max-w-3xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+        <div className="mb-10">
+          <Cuadricula mes={mes} onMes={cambiarMes} seleccionado={seleccionado} onSeleccionar={setSeleccionado} />
+        </div>
+
         {meses.length === 0 ? (
           <p className="rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center text-slate-500">
-            No hay fechas próximas cargadas por el momento.
+            {vista === 'mes' ? 'No hay fechas cargadas para este período.' : 'No hay fechas próximas cargadas por el momento.'}
           </p>
         ) : (
           <div className="space-y-10">
