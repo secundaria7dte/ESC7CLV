@@ -171,6 +171,19 @@ export default function Contacto() {
             </div>
           </div>
         </div>
+
+        {institucion.mapaEmbed && (
+          <div className="reveal mt-8 overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm">
+            <iframe
+              src={institucion.mapaEmbed}
+              title={`Mapa: ${institucion.nombreCompleto}, ${institucion.direccion}, ${institucion.localidad}`}
+              className="block h-[320px] sm:h-[420px] w-full border-0"
+              loading="lazy"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+            />
+          </div>
+        )}
       </section>
     </div>
   )

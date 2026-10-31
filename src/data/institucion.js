@@ -10,6 +10,9 @@ export const institucion = {
   telefono: '498-3863',
   // Full international number for tel: links (Diamante area code 0343).
   telefonoLink: '+543434983863',
+  // Google Maps "Insertar un mapa" link (only the src of the iframe). '' hides the map.
+  mapaEmbed:
+    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d491.00576171728227!2d-60.6361140094109!3d-32.06786640975467!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95b5cda445c18f6b%3A0x11e722721169258c!2sColegio%20Mixto%20%22Dr.%20Carlos%20Lorenzo%20Vergara%22%20N%C2%B07!5e0!3m2!1ses-419!2sar!4v1793405463763!5m2!1ses-419!2sar',
   // Pending confirmation: fill in to show it on the site.
   email: '',
   horarioAtencion: '08:00 a 11:00 hs',
