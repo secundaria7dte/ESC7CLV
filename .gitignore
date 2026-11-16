@@ -25,3 +25,7 @@ dist-ssr
 
 # Material de diseño local
 design/
+
+# Datos sensibles (docentes, preceptores, horarios reales): nunca al repo
+*.csv
+datos-privados/

@@ -11,6 +11,7 @@ const Orientaciones = lazy(() => import('./pages/Orientaciones.jsx'))
 const VidaEscolar = lazy(() => import('./pages/VidaEscolar.jsx'))
 const Noticias = lazy(() => import('./pages/Noticias.jsx'))
 const Noticia = lazy(() => import('./pages/Noticia.jsx'))
+const Mapa = lazy(() => import('./pages/Mapa.jsx'))
 const Calendario = lazy(() => import('./pages/Calendario.jsx'))
 const Mesas = lazy(() => import('./pages/Mesas.jsx'))
 const Preguntas = lazy(() => import('./pages/Preguntas.jsx'))
@@ -66,6 +67,7 @@ export default function App() {
               <Route path="/vida-escolar" element={<VidaEscolar />} />
               <Route path="/noticias" element={<Noticias />} />
               <Route path="/noticias/:slug" element={<Noticia />} />
+              <Route path="/mapa" element={<Mapa />} />
               <Route path="/calendario" element={<Calendario />} />
               <Route path="/mesas" element={<Mesas />} />
               <Route path="/preguntas-frecuentes" element={<Preguntas />} />

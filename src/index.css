@@ -199,3 +199,118 @@ body {
   .reveal { opacity: 1; transform: none; transition: none; }
   .animate-marquee, .animate-float, .animate-kenburns, .animate-esc7-pulse { animation: none; }
 }
+
+/* ---------- Classroom map (/mapa) ---------- */
+@keyframes mapa-entra {
+  from { opacity: 0; transform: scale(.88); }
+  to { opacity: 1; transform: none; }
+}
+.mapa-sala {
+  cursor: pointer;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: mapa-entra .55s cubic-bezier(.2,.7,.2,1) both;
+  animation-delay: calc(var(--i, 0) * 40ms);
+  outline: none;
+}
+.mapa-sala rect.mapa-forma { transition: fill .4s ease, stroke .3s ease, stroke-width .3s ease, filter .3s ease; }
+.mapa-sala:hover rect.mapa-forma,
+.mapa-sala:focus-visible rect.mapa-forma { filter: brightness(.96) drop-shadow(0 4px 8px rgba(10,22,40,.18)); }
+.mapa-sala:focus-visible rect.mapa-forma { stroke: var(--color-brand-royal); stroke-width: 3; }
+
+@keyframes mapa-ruta-traza { to { stroke-dashoffset: 0; } }
+.mapa-ruta {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: mapa-ruta-traza 1.3s ease-in-out .15s forwards;
+}
+
+@keyframes mapa-pulso {
+  0% { transform: scale(.6); opacity: .7; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+.mapa-pulso {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: mapa-pulso 2s ease-out infinite;
+}
+
+@keyframes mapa-panel-entra {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.mapa-panel { animation: mapa-panel-entra .4s cubic-bezier(.2,.7,.2,1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mapa-sala, .mapa-panel, .mapa-pulso { animation: none; }
+  .mapa-ruta { animation: none; stroke-dashoffset: 0; }
+  .mapa-sala rect.mapa-forma { transition: none; }
+  .mapa-punto-ruta { display: none; }
+}
+
+/* ---------- Building view: floors as flat layers or an isometric stack ---------- */
+.edificio {
+  container-type: inline-size;
+  position: relative;
+  aspect-ratio: 760 / 560;
+}
+.edificio-escena {
+  position: absolute;
+  inset: 0;
+  perspective: 170cqw;
+  transform-style: preserve-3d;
+}
+.edificio-capa {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform .95s cubic-bezier(.2,.7,.2,1), opacity .6s ease;
+  /* Same function list in every state so the browser can interpolate between them. */
+  transform: translateY(0) rotateX(0deg) rotateZ(0deg) translateZ(0cqw) scale(1);
+}
+.capa-losa {
+  position: absolute;
+  inset: -2%;
+  border-radius: 1.25rem;
+  background: #fff;
+  border: 1px solid rgba(148,163,184,.55);
+  box-shadow: 0 2px 4px rgba(10,22,40,.06), 0 24px 40px -12px rgba(10,22,40,.28);
+  opacity: 0;
+  transform: translateZ(-2px);
+  transition: opacity .6s ease, box-shadow .3s ease;
+}
+.capa-etiqueta {
+  position: absolute;
+  left: 1%;
+  top: -7%;
+  padding: .25rem .75rem;
+  border-radius: 999px;
+  background: var(--color-brand-navy);
+  color: #fff;
+  font-size: clamp(9px, 2.6cqw, 14px);
+  font-weight: 800;
+  white-space: nowrap;
+  transform: translateZ(3px);
+  opacity: 0;
+  transition: opacity .5s ease;
+}
+
+/* Flat: only the chosen floor is visible; the other waits above or below. */
+.edificio[data-vista="plano"] .edificio-capa[data-elegida="false"] { opacity: 0; pointer-events: none; }
+.edificio[data-vista="plano"] .edificio-capa[data-piso="0"][data-elegida="false"] { transform: translateY(7%) rotateX(0deg) rotateZ(0deg) translateZ(0cqw) scale(.97); }
+.edificio[data-vista="plano"] .edificio-capa[data-piso="1"][data-elegida="false"] { transform: translateY(-7%) rotateX(0deg) rotateZ(0deg) translateZ(0cqw) scale(.97); }
+
+/* Isometric stack: upper floor lifted along the plane's normal. */
+.edificio[data-vista="edificio"] .edificio-capa { cursor: pointer; }
+.edificio[data-vista="edificio"] .edificio-capa[data-piso="0"] { transform: translateY(14%) rotateX(58deg) rotateZ(-36deg) translateZ(0cqw) scale(.7); }
+.edificio[data-vista="edificio"] .edificio-capa[data-piso="1"] { transform: translateY(14%) rotateX(58deg) rotateZ(-36deg) translateZ(20cqw) scale(.7); }
+.edificio[data-vista="edificio"] .edificio-capa[data-elegida="false"] svg { opacity: .55; }
+.edificio-capa svg { transition: opacity .5s ease; }
+.edificio[data-vista="edificio"] .capa-losa { opacity: 1; }
+.edificio[data-vista="edificio"] .capa-etiqueta { opacity: 1; }
+.edificio[data-vista="edificio"] .edificio-capa:hover .capa-losa { box-shadow: 0 2px 4px rgba(10,22,40,.08), 0 30px 50px -10px rgba(10,22,40,.38); }
+.edificio[data-vista="edificio"] .edificio-capa[data-elegida="true"] .capa-losa { border-color: var(--color-brand-crimson); }
+
+@media (prefers-reduced-motion: reduce) {
+  .edificio-capa, .capa-losa, .capa-etiqueta { transition: none; }
+}

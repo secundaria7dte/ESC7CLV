@@ -8,6 +8,7 @@ export const secciones = [
     links: [
       { to: '/institucional', label: 'Institucional', detalle: 'Quiénes somos y nuestra identidad' },
       { to: '/orientaciones', label: 'Orientaciones y turnos', detalle: 'Mañana, tarde y noche (ESJA)' },
+      { to: '/mapa', label: 'Mapa de aulas', detalle: 'Encontrá tu aula en tiempo real' },
       { to: '/vida-escolar', label: 'Vida escolar', detalle: 'Galería de nuestra comunidad' },
     ],
   },
