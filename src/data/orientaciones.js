@@ -1,5 +1,16 @@
 import { fotos } from './fotos.js'
 
+// One tile per orientación for the home grid: a single reference photo and its colour.
+// Colours come from the 2026 graduating-class flags; Educación Física still uses a placeholder photo.
+// `nombre` must match the strings in `materias` below, so the tile can list the turnos that offer it.
+export const orientacionesGrid = [
+  { nombre: 'Ciencias Sociales y Humanidades', corto: 'Humanidades', color: '#1f5a5c', img: fotos.banderaHumanidades },
+  { nombre: 'Ciencias Naturales', corto: 'Naturales', color: '#e0177a', img: fotos.banderaNaturales },
+  { nombre: 'Economía y Administración', corto: 'Economía y Adm.', color: '#c4583c', img: fotos.banderaEconomia },
+  { nombre: 'Programación y Robótica', corto: 'Robótica', color: '#0ea5e9', img: fotos.robotica },
+  { nombre: 'Educación Física', corto: 'Ed. Física', color: '#f97316', img: fotos.voley1 },
+]
+
 // Official offer as published by the school for the 2027 school year.
 export const orientaciones = [
   {

@@ -17,6 +17,10 @@ export const fotos = {
   charla2: img('charla-alimentacion-2.webp'),
   picnic: img('picnic.webp'),
   alumnos: img('alumnos.webp'),
+  banderaHumanidades: img('orientaciones/bandera-humanidades.webp'),
+  banderaNaturales: img('orientaciones/bandera-naturales.webp'),
+  banderaEconomia: img('orientaciones/bandera-economia.webp'),
+  robotica: img('orientaciones/robotica.webp'),
 }
 
 /**

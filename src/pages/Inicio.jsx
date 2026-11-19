@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { fotos, fachadaSegunHora } from '../data/fotos.js'
-import { orientaciones } from '../data/orientaciones.js'
+import { orientaciones, orientacionesGrid } from '../data/orientaciones.js'
 import { preinscripcion, totalDocumentos } from '../data/institucion.js'
 import { ultimasNoticias } from '../data/noticias.js'
 import { proximosEventos } from '../data/calendario.js'
@@ -198,6 +198,70 @@ export default function Inicio() {
             </div>
           </div>
         </article>
+      </section>
+
+      {/* ===================================================================== */}
+      {/* ORIENTACIONES: una foto de referencia por orientación                 */}
+      {/* ===================================================================== */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 lg:pt-24">
+        <div className="reveal flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6 sm:mb-8">
+          <div className="space-y-2">
+            <span className="eyebrow">Orientaciones</span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-brand-navy">
+              ¿Qué te gustaría{' '}
+              <span className="font-serif italic font-normal text-brand-crimson">estudiar</span>?
+            </h2>
+          </div>
+          <Link to="/orientaciones" className="group inline-flex flex-none items-center gap-1.5 py-2 text-sm font-bold text-brand-navy hover:text-brand-crimson">
+            Ver turnos y horarios
+            <Arrow className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+          {orientacionesGrid.map((g, i) => {
+            const turnos = orientaciones
+              .filter((o) => o.materias.includes(g.nombre))
+              .map((o) => o.turno.replace('Turno ', ''))
+            return (
+              <Link
+                key={g.nombre}
+                to="/orientaciones"
+                style={{ '--reveal-delay': `${i * 80}ms`, '--c': g.color }}
+                className={`reveal group relative block overflow-hidden rounded-2xl bg-brand-navy lg:aspect-[3/4] ${
+                  // Odd count: the last tile spans the full row below lg.
+                  i === orientacionesGrid.length - 1 ? 'col-span-2 aspect-[2/1] lg:col-span-1' : 'aspect-[4/3]'
+                }`}
+              >
+                <img
+                  src={g.img}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 h-full w-full object-cover transition-[scale,filter] duration-700 ease-out [@media(hover:hover)]:grayscale-[60%] group-hover:grayscale-0 group-hover:scale-105"
+                />
+                {/* Colour wash from the bottom, deeper on hover */}
+                <div
+                  className="absolute inset-0 opacity-80 transition-opacity duration-500 group-hover:opacity-100"
+                  style={{ background: 'linear-gradient(to top, rgb(10 22 40 / 0.9), color-mix(in srgb, var(--c) 35%, transparent) 55%, transparent)' }}
+                />
+                <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 text-white">
+                  <span
+                    className="block h-1 w-6 rounded-full transition-[width] duration-500 ease-out group-hover:w-12"
+                    style={{ backgroundColor: 'var(--c)' }}
+                  />
+                  <h3 className="mt-2 sm:mt-2.5 text-base sm:text-lg font-extrabold leading-tight" title={g.nombre}>
+                    <span className="lg:hidden">{g.corto}</span>
+                    <span className="hidden lg:inline">{g.nombre}</span>
+                  </h3>
+                  <span className="mt-1 block font-mono text-[11px] uppercase tracking-wider text-white/75">
+                    {turnos.join(' · ')}
+                  </span>
+                </div>
+              </Link>
+            )
+          })}
+        </div>
       </section>
 
       {/* ===================================================================== */}
